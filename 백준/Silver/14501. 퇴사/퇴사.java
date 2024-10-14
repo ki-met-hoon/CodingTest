@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Arrays;
 
 class Main {
 
@@ -15,6 +16,7 @@ class Main {
         n = Integer.parseInt(br.readLine());
 
         Info[] info = new Info[n + 1];
+        int[] mv = new int[n + 2];
 
         for (int i = 1; i < info.length; i++) {
             String[] temp = br.readLine().split(" ");
@@ -22,24 +24,19 @@ class Main {
             info[i] = new Info(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
         }
 
-        dfs(info, 1, 0);
-        bw.write(String.valueOf(ans));
+        dp(info, mv);
+        bw.write(String.valueOf(mv[1]));
         bw.flush();
     }
 
-    private static void dfs(Info[] info, int idx, int pay) {
-        if (idx > n) {
-            ans = Math.max(ans, pay);
-            return;
+    private static void dp(Info[] info, int[] mv) {
+        for (int i = n; i > 0; i--) {
+            if (i + info[i].date > n + 1) {
+                mv[i] = mv[i + 1];
+            } else {
+                mv[i] = Math.max(mv[i + 1], info[i].val + mv[i + info[i].date]);
+            }
         }
-
-        if (idx + info[idx].date <= n + 1) {
-            dfs(info, idx + info[idx].date, pay + info[idx].val);
-        } else {
-            dfs(info, idx + info[idx].date, pay);
-        }
-
-        dfs(info, idx + 1, pay);
     }
 
     private static class Info {
