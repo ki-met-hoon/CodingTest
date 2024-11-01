@@ -1,70 +1,29 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(in.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken()) * 2 + 1;
 
-    private static final int RANGE = 1000001;
-
-    public static void main(String args[]) throws IOException{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
-        String[] nk = br.readLine().split(" ");
-        int n = Integer.parseInt(nk[0]);
-        int k = Integer.parseInt(nk[1]);
-
-        int[] map = new int[RANGE];
-        int min = Integer.MAX_VALUE;
-        int max = Integer.MIN_VALUE;
-
-        for (int i = 0; i < n; i++) {
-            String[] gk = br.readLine().split(" ");
-
-            int g = Integer.parseInt(gk[0]);
-            int x = Integer.parseInt(gk[1]);
-            map[x] = g;
-
-            if (x < min) {
-                min = x;
-            }
-
-            if (x > max) {
-                max = x;
-            }
+        int[] ice = new int[1000001];
+        int g, x;
+        for (int i = 0; i < N; i++) {
+            st = new StringTokenizer(in.readLine());
+            g = Integer.parseInt(st.nextToken());
+            x = Integer.parseInt(st.nextToken());
+            ice[x] = g;
         }
 
-        int left = min;
-        int right = min + 2 * k + 1;
-
-        int val = 0;
-
-        for (int i = left; i < right; i++) {
-            if (i >= RANGE) break;
-            val += map[i];
+        int sum = 0, max = 0;
+        for (int i = 0; i <= 1000000; i++) {
+            if(i-K>=0) sum -= ice[i - K];
+            sum += ice[i];
+            max = Math.max(max,sum);
         }
 
-        int ans = val;
-
-        for (int i = left + 1; i <= max - 2 * k; i++) {
-            int temp = val;
-
-            if (map[i - 1] != 0) {
-                temp -= map[i - 1];
-            }
-
-            if (map[right] != 0) {
-                temp += map[right];
-            }
-
-            if (ans < temp) {
-                ans = temp;
-            }
-
-            val = temp;
-            right++;
-        }
-
-        bw.write(String.valueOf(ans));
-        bw.flush();
+        System.out.println(max);
     }
 }
