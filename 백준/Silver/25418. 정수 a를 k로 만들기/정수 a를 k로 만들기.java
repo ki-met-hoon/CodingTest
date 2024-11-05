@@ -1,81 +1,35 @@
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-
-    public static void main(String args[]) throws IOException {
+    private void solution() throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
-        String[] AK = br.readLine().split(" ");
-        int A = Integer.parseInt(AK[0]);
-        int K = Integer.parseInt(AK[1]);
-
-        Deque<Value> q = new ArrayDeque<>();
-        q.offerFirst(new Value(A, 0));
-
-        boolean[] visited = new boolean[1000001];
-
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int a = Integer.parseInt(st.nextToken());
+        int k = Integer.parseInt(st.nextToken());
+        Queue<int[]> q = new ArrayDeque<>();
+        boolean[] v = new boolean[k+1];
+        q.add(new int[]{a,0});
+        v[a] = true;
         while (!q.isEmpty()) {
-            Value curValue = q.pollLast();
-            Value nxtValue1 = new Value(oper1(curValue.num), curValue.count + 1);
-            Value nxtValue2 = new Value(oper2(curValue.num), curValue.count + 1);
-
-            if (curValue.num == K) {
-                bw.write(String.valueOf(curValue.count));
-                bw.flush();
+            int[] cur = q.poll();
+            if (cur[0] == k) {
+                System.out.println(cur[1]);
                 return;
             }
-
-            if (nxtValue2.num > K) {
-                if (visited[nxtValue1.num]) {
-                    continue;
-                }
-
-                q.offerFirst(nxtValue1);
-                visited[nxtValue1.num] = true;
-                continue;
+            if (cur[0]*2<=k) {
+                v[cur[0]*2] = true;
+                q.add(new int[]{cur[0]*2, cur[1]+1});
             }
-
-            if (visited[nxtValue1.num] && visited[nxtValue2.num]) {
-                continue;
-            }
-
-            if (visited[nxtValue1.num]) {
-                q.offerFirst(nxtValue2);
-                visited[nxtValue2.num] = true;
-                continue;
-            }
-
-            if (visited[nxtValue2.num]) {
-                q.offerFirst(nxtValue1);
-                visited[nxtValue1.num] = true;
-                continue;
-            }
-
-
-            q.offerFirst(nxtValue1);
-            visited[nxtValue1.num] = true;
-            q.offerFirst(nxtValue2);
-            visited[nxtValue2.num] = true;
+            if (!v[cur[0]+1])
+                q.add(new int[]{cur[0]+1, cur[1]+1});
         }
     }
 
-    private static class Value {
-        int num;
-        int count;
-
-        public Value(int num, int count) {
-            this.num = num;
-            this.count = count;
-        }
-    }
-
-    private static int oper1(int num) {
-        return num + 1;
-    }
-
-    private static int oper2(int num) {
-        return num * 2;
+    public static void main(String[] args) throws Exception {
+        new Main().solution();
     }
 }
