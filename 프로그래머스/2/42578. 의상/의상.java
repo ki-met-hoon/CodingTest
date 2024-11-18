@@ -12,12 +12,7 @@ class Solution {
             String name = row[0];
             String kind = row[1];
             
-            if (map.containsKey(kind)) {
-                map.get(kind).add(name);
-                continue;
-            }
-
-            map.put(kind, new ArrayList<>());
+            map.putIfAbsent(kind, new ArrayList<>());
             map.get(kind).add(name);
         }
         
