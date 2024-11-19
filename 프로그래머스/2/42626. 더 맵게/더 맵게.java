@@ -18,7 +18,7 @@ class Solution {
             priorityQueue.add(first + (second * 2));
         }
 
-        if (priorityQueue.size() == 1 && priorityQueue.peek() < K) {
+        if (priorityQueue.peek() < K) {
             return -1;
         }
 
