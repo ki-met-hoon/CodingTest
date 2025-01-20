@@ -7,11 +7,7 @@ class Solution {
     public int solution(String begin, String target, String[] words) {
         int result = 0;
         
-        HashMap<String, Boolean> visited = new HashMap<>();
-        visited.put(begin, false);
-        for(String word : words) {
-            visited.put(word, false);
-        }
+        boolean[] visited = new boolean[words.length];
         
         dfs(begin, target, visited, words, result);
         
@@ -22,27 +18,27 @@ class Solution {
         return 0;
     }
     
-    private void dfs(String begin, String target, HashMap<String, Boolean> visited, String[] words, int result) {
+    private void dfs(String begin, String target, boolean[] visited, String[] words, int result) {
         if(begin.equals(target)) {
             flag = true;
             answer = result;
             return;
         }
         
-        for(String word : words) {
+        for(int j = 0; j < words.length; j++) {
             int count = 0;
             
-            if(!visited.get(word)) {
-                for(int i = 0; i < word.length(); i++) {
-                    if(word.charAt(i) != begin.charAt(i)) {
+            if(!visited[j]) {
+                for(int i = 0; i < words[j].length(); i++) {
+                    if(words[j].charAt(i) != begin.charAt(i)) {
                         count++;
                     }
                 }
                 
                 if(count == 1) {
-                    visited.replace(begin, true);
-                    dfs(word, target, visited, words, result + 1);
-                    visited.replace(word, false);
+                    visited[j] = true;
+                    dfs(words[j], target, visited, words, result + 1);
+                    visited[j] = false;
                 }
             }
         }
