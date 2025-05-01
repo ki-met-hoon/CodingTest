@@ -11,18 +11,19 @@ class Main {
 
         while (T-- > 0) {
             int N = Integer.parseInt(br.readLine());
-            HashMap<Integer, Integer> map = new HashMap<>();
             int[] note1 = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-
-            for (int i = 0; i < N; i++) {
-                map.put(note1[i], 0);
-            }
-
             int M = Integer.parseInt(br.readLine());
             int[] note2 = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-            for (int j = 0; j < M; j++) {
-                if (map.containsKey(note2[j])) {
+            Arrays.sort(note1);
+
+            int start = 0;
+            int end = note1.length - 1;
+
+            for (int i = 0; i < M; i++) {
+                int index = lowerBound(start, end, note2[i], note1);
+
+                if (checkNum(note1, index, note2[i])) {
                     sb.append(1);
                 } else {
                     sb.append(0);
@@ -34,5 +35,23 @@ class Main {
 
         bw.write(String.valueOf(sb));
         bw.flush();
+    }
+
+    private static int lowerBound(int start, int end, int key, int[] nums) {
+        while (start < end) {
+            int mid = (start + end) / 2;
+
+            if (nums[mid] < key) {
+                start = mid + 1;
+            } else {
+                end = mid;
+            }
+        }
+
+        return end;
+    }
+
+    private static boolean checkNum(int[] nums, int num, int key) {
+        return nums[num] == key;
     }
 }
